@@ -1,0 +1,16 @@
+const express = require('express');
+const router=express.Router();
+
+const {newOrder,myOrders,getSingleOrder,allOrders,deleteOrder,updateOrders}=require('../controllers/orderControllers')
+
+const {isAuthenticatedUser,authorizeRoles}=require('../middlerwares/auth');
+
+router.route('/order/new').post(isAuthenticatedUser,newOrder)
+
+router.route('/order/:id').get(isAuthenticatedUser,getSingleOrder)
+router.route('/orders/me').get(isAuthenticatedUser,myOrders)
+router.route('/admin/orders').get(isAuthenticatedUser,authorizeRoles('admin'),allOrders)
+router.route('/admin/order/:id').put(isAuthenticatedUser,authorizeRoles('admin'),updateOrders).delete(isAuthenticatedUser,authorizeRoles('admin'),deleteOrder)
+
+
+module.exports=router;
