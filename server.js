@@ -1,5 +1,7 @@
 const app= require('./app');
 const dotenv=require('dotenv');
+const cloudinary=require('cloudinary');
+
 const connectDatabase =require('./config/database')
 process.on('uncaughtException',err=>{
     console.log(`ERROR: ${err.stack}`);
@@ -8,6 +10,13 @@ process.on('uncaughtException',err=>{
      
         process.exit(1)
     
+})
+
+// setting up cloudinary
+cloudinary.config({
+    cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
+    api_key:process.env.CLOUDINARY_API_KEY,
+    api_secret:process.env.CLOUDINARY_API_SEC
 })
 
 
