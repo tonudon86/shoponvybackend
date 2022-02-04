@@ -9,12 +9,17 @@ const sendEmail=require('../utils/sendEmail');
 // register a user  api/v1/register
 
 exports.registerUser=catchAsyncError ( async (req,res,next) => {
-    const result=await cloudinary.v2.uploader.upload(req.body.avatar,{
-        folder:'avatars',
-        width:150,
-        crop:'scale'
-    })
-    const {name,email,password } = req.body;
+    // console.log(req.body)
+    let {name,email,password,avatar}=req.body
+   
+        const result=await cloudinary.v2.uploader.upload(avatar,{
+            folder:'avatars',
+            width:150,
+            crop:'scale'
+        })
+ 
+
+    // console.log(result)
 
     const user =await User.create({
         name,
@@ -26,9 +31,10 @@ exports.registerUser=catchAsyncError ( async (req,res,next) => {
 
         }
     })
+    // console.log(user)
   sendToken(user,200,res)
 
-
+    
 
 }) 
 
