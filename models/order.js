@@ -43,7 +43,15 @@ const orderSchema =mongoose.Schema({
             price:{
                 type: Number,
                 required: true 
-            },    
+            }, 
+            variations:{
+                variation_name:{
+                    type:String
+                },
+                variation_price:{
+                    type:Number
+                }
+            },   
             product:{
                 type: mongoose.Schema.Types.ObjectId,
                 required: true,

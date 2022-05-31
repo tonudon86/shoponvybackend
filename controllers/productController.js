@@ -1,5 +1,5 @@
 const Product= require('../models/product');
-
+const cloudinary=require('cloudinary');
 const ErrorHandler = require('../utils/errorHandler')
 
 const catchAsyncError=require('../middlerwares/catchAsyncError');
@@ -10,8 +10,22 @@ const { createIndexes } = require('../models/product');
 
 // add product
 exports.newProducts = catchAsyncError( async (req,res,next)=>{
- req.body.user=req.user.id
-    const product=await Product.create(req.body);
+
+    let {name,price,description,category,image}=req.body
+   
+    let images=[]
+    const result=await cloudinary.v2.uploader.upload(image,{
+        folder:'products',
+        width:150,
+        crop:'scale'
+    })
+    images.push({
+        public_id:result.public_id,
+        url:result.url
+    })
+    const product=await Product.create({
+        name,price,description,category,images
+    });
     res.status(201).json({
         success: true,
         product
@@ -168,4 +182,20 @@ const ratings=product.ratings=product.reviews.reduce((acc,item)=>item.rating+acc
         useFindandModify:false
     })
     res.status(200).json({success:true })
+})
+
+
+// admin get all Products 
+exports.getAllProducts=catchAsyncError(async (req,res,next)=>{
+    let {category}=req.body
+    if(category){
+     
+        let products= await Product.find({category})
+        res.status(200).json({ success: true,data:products})
+    }
+    else{
+        let products= await Product.find()
+        res.status(200).json({ success: true,data:products})
+    }
+    
 })
